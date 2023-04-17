@@ -103,6 +103,7 @@ export function AsyncAutocomplete<T>(props: AsyncAutocompleteProps<T>): JSX.Elem
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent): void => {
       if (e.key === 'Enter') {
+        console.log(e);
         if (!timerRef.current && !abortControllerRef.current) {
           killEvent(e);
           if (optionsRef.current && optionsRef.current.length > 0) {

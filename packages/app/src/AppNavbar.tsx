@@ -1,5 +1,5 @@
 import { createStyles, getStylesRef, Navbar, Space, Text } from '@mantine/core';
-import { useMedplumContext } from '@medplum/react';
+import { CodeInput, useMedplumContext } from '@medplum/react';
 import {
   Icon,
   IconBrandAsana,
@@ -81,6 +81,11 @@ export function AppNavbar({ closeNavbar }: AppNavbarProps): JSX.Element {
   const navigate = useNavigate();
   const context = useMedplumContext();
   const config = context.medplum.getUserConfiguration();
+  const codeInputSearchOptions = {
+    createable: false,
+    maxSelectedValues: 1,
+    clearSearchOnChange: false,
+  };
 
   function onLinkClick(e: React.SyntheticEvent, to: string): void {
     e.stopPropagation();
@@ -91,8 +96,27 @@ export function AppNavbar({ closeNavbar }: AppNavbarProps): JSX.Element {
     }
   }
 
+  function navigateResourceType(resourceType: string | undefined): void {
+    if (resourceType) {
+      navigate(`/${resourceType}`);
+    }
+  }
+
   return (
     <Navbar width={{ sm: 250 }} p="xs">
+      <Navbar.Section>
+        <CodeInput
+          name="resourceType"
+          placeholder="Resource Type..."
+          property={{
+            binding: {
+              valueSet: 'http://hl7.org/fhir/ValueSet/resource-types',
+            },
+          }}
+          onChange={(newValue) => navigateResourceType(newValue)}
+          {...codeInputSearchOptions}
+        />
+      </Navbar.Section>
       <Navbar.Section grow>
         {config?.menu?.map((menu, index) => (
           <React.Fragment key={`menu-${index}-${config?.menu?.length}`}>
