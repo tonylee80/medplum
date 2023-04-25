@@ -25,6 +25,7 @@ import {
   IconColumns,
   IconFilePlus,
   IconFilter,
+  IconHeart,
   IconTableExport,
   IconTrash,
 } from '@tabler/icons-react';
@@ -94,6 +95,7 @@ interface SearchControlState {
   selected: { [id: string]: boolean };
   fieldEditorVisible: boolean;
   filterEditorVisible: boolean;
+  locationFavoriteVisible: boolean;
   filterDialogVisible: boolean;
   exportDialogVisible: boolean;
   filterDialogFilter?: Filter;
@@ -154,6 +156,7 @@ export function SearchControl(props: SearchControlProps): JSX.Element {
     selected: {},
     fieldEditorVisible: false,
     filterEditorVisible: false,
+    locationFavoriteVisible: false,
     exportDialogVisible: false,
     filterDialogVisible: false,
   });
@@ -317,6 +320,15 @@ export function SearchControl(props: SearchControlProps): JSX.Element {
               onClick={() => setState({ ...stateRef.current, filterEditorVisible: true })}
             >
               Filters
+            </Button>
+            <Button
+              compact
+              variant={buttonVariant}
+              color={buttonColor}
+              leftIcon={<IconHeart size={iconSize} />}
+              onClick={() => setState({ ...stateRef.current, locationFavoriteVisible: true })}
+            >
+              Add Location To Favorite
             </Button>
             {props.onNew && (
               <Button
@@ -534,6 +546,23 @@ export function SearchControl(props: SearchControlProps): JSX.Element {
           setState({
             ...stateRef.current,
             filterEditorVisible: false,
+          });
+        }}
+      />
+      <SearchFilterEditor
+        search={props.search}
+        visible={stateRef.current.locationFavoriteVisible}
+        onOk={(result) => {
+          emitSearchChange(result);
+          setState({
+            ...stateRef.current,
+            filterEditorVisible: false,
+          });
+        }}
+        onCancel={() => {
+          setState({
+            ...stateRef.current,
+            locationFavoriteVisible: false,
           });
         }}
       />
