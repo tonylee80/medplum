@@ -12,6 +12,7 @@ import {
   IconLockAccess,
   IconMicroscope,
   IconPackages,
+  IconPlus,
   IconReceipt,
   IconReportMedical,
   IconStar,
@@ -52,6 +53,20 @@ function userConfigToMenu(config: UserConfiguration | undefined): NavbarMenu[] {
           icon: getIcon(link.target as string),
         })) || [],
     })) || [];
+
+  console.log(config);
+
+  const userConfigLink = config?.id ? `${config.id}/edit` : '/new';
+  result.unshift({
+    title: 'Edit UserConfig Page',
+    links: [
+      {
+        label: 'Bookmark Page',
+        href: `/UserConfiguration/${userConfigLink}`,
+        icon: <IconPlus />,
+      },
+    ],
+  });
 
   result.push({
     title: 'Settings',
