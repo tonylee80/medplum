@@ -22,17 +22,20 @@ import React, { Suspense } from 'react';
 import { AppRoutes } from './AppRoutes';
 
 import './App.css';
+import { Location, useLocation } from 'react-router-dom';
 
 export function App(): JSX.Element {
   const medplum = useMedplum();
   const config = medplum.getUserConfiguration();
+  const location = useLocation();
+  console.log(location);
 
   if (medplum.isLoading()) {
     return <Loading />;
   }
 
   return (
-    <AppShell logo={<Logo size={24} />} version={MEDPLUM_VERSION} menus={userConfigToMenu(config)}>
+    <AppShell logo={<Logo size={24} />} version={MEDPLUM_VERSION} menus={userConfigToMenu(config, location)}>
       <ErrorBoundary>
         <Suspense fallback={<Loading />}>
           <AppRoutes />
@@ -42,7 +45,7 @@ export function App(): JSX.Element {
   );
 }
 
-function userConfigToMenu(config: UserConfiguration | undefined): NavbarMenu[] {
+function userConfigToMenu(config: UserConfiguration | undefined, location: Location): NavbarMenu[] {
   const result =
     config?.menu?.map((menu) => ({
       title: menu.title,
@@ -57,12 +60,13 @@ function userConfigToMenu(config: UserConfiguration | undefined): NavbarMenu[] {
   console.log(config);
 
   const userConfigLink = config?.id ? `${config.id}/edit` : '/new';
+  const bookmarkLink = location;
   result.unshift({
     title: 'Edit UserConfig Page',
     links: [
       {
         label: 'Bookmark Page',
-        href: `/UserConfiguration/${userConfigLink}`,
+        href: `/UserConfiguration/${userConfigLink}?bookmark=${bookmarkLink.pathname}`,
         icon: <IconPlus />,
       },
     ],

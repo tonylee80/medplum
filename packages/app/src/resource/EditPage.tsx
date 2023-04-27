@@ -3,7 +3,7 @@ import { deepClone, normalizeErrorString, normalizeOperationOutcome } from '@med
 import { OperationOutcome, Resource, ResourceType } from '@medplum/fhirtypes';
 import { Document, ResourceForm, useMedplum } from '@medplum/react';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Location, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { cleanResource } from './utils';
 
 export function EditPage(): JSX.Element | null {
@@ -12,6 +12,7 @@ export function EditPage(): JSX.Element | null {
   const [value, setValue] = useState<Resource | undefined>();
   const navigate = useNavigate();
   const [outcome, setOutcome] = useState<OperationOutcome | undefined>();
+  const location = useLocation;
 
   useEffect(() => {
     medplum
@@ -44,6 +45,13 @@ export function EditPage(): JSX.Element | null {
 
   if (!value) {
     return null;
+  }
+  addBookmark(value, location);
+
+  function addBookmark(value: Resource, location: Location): void {
+    const bookmark = location.search;
+    console.log('addbookmark', bookmark);
+    value.id = 'hi';
   }
 
   return (
